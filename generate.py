@@ -70,9 +70,6 @@ def main():
     else:
         print("Not a valid directory path")
 
-    """Activate the environment that has pyside2-uic"""
-    # os.system("source /Users/rmallow/Documents/stonks/algobuilder/env/bin/activate")
-
     """Get list of ui files and if necessary check if one was modified"""
     ui_files = []
     runCommands = args.modified is None
