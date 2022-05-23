@@ -1,5 +1,5 @@
 import os
-import sys
+import time
 import argparse
 
 VERSION_TO_COMMAND = {
@@ -15,17 +15,42 @@ def main():
     parser = argparse.ArgumentParser(
         description='Generates python code from .ui files in a directory. Appends "ui_" to python code file name'
     )
-    parser.add_argument("path", help="The path to generate the python code from")
+    parser.add_argument(
+        "-e",
+        "--env",
+        nargs="?",
+        const=1,
+        default="",
+        help="The path to the environment bin to call the command from",
+    )
+    parser.add_argument(
+        "-p",
+        "--path",
+        nargs="?",
+        const=1,
+        default=None,
+        help="The path to generate the python code from",
+    )
     parser.add_argument(
         "-v",
         "--version",
         nargs="?",
-        const=1,
+        const="pyside2",
         default="pyside2",
         help="Python Qt Library Version for determining command",
     )
+    parser.add_argument(
+        "-m",
+        "--modified",
+        nargs="?",
+        const=30,
+        default=30,
+        help="Flag for checking if a .ui file has been modified in the last X seconds before running",
+    )
     args = parser.parse_args()
     command = None
+    path = None
+
     if args.version.lower() in VERSION_TO_COMMAND:
         command = VERSION_TO_COMMAND[args.version.lower()]
     else:
@@ -35,15 +60,35 @@ def main():
         )
         return
 
-    """Generate python code from files in path"""
-    path = args.path
+    if args.path is None:
+        path = os.getcwd()
+    else:
+        path = args.path
+
     if os.path.isdir(path):
         os.chdir(path)
-        for file in os.listdir(os.getcwd()):
-            if file.endswith(".ui"):
-                os.system(f"{command} {file} -o ui_{file[:-3]}.py")
     else:
         print("Not a valid directory path")
+
+    """Activate the environment that has pyside2-uic"""
+    # os.system("source /Users/rmallow/Documents/stonks/algobuilder/env/bin/activate")
+
+    """Get list of ui files and if necessary check if one was modified"""
+    ui_files = []
+    runCommands = args.modified is None
+    for file in os.listdir(os.getcwd()):
+        if file.endswith(".ui"):
+            ui_files.append(file)
+            # if the modified flag is set
+            # and we haven't already found a file that has been modified recently
+            if args.modified is not None and not runCommands:
+                runCommands = time.time() - os.path.getmtime(path) < int(args.modified)
+
+    print(runCommands)
+    """Generate python code from files in path"""
+    if runCommands:
+        for file in ui_files:
+            os.system(f"{args.env}/{command} {file} -o ui_{file[:-3]}.py")
 
 
 if __name__ == "__main__":
