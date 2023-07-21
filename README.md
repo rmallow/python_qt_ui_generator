@@ -8,7 +8,7 @@ This will use Mac launch agents to watch for a change in specified folder and au
 Requires Python Qt library to be installed.
 
 Depending on system, might need to manually load plist by running:
-launchtl load ~/Library/LaunchAgents/local.qt_auto_generate.plist
+launchctl load ~/Library/LaunchAgents/local.qt_auto_generate.plist
 
 Another issue could be shell not having full disk access. To resolve:
 System Preferences > Security & Privacy > Full Disk Access

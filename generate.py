@@ -5,8 +5,10 @@ import argparse
 VERSION_TO_COMMAND = {
     "pyside": "pyside-uic",
     "pyside2": "pyside2-uic",
+    "pyside6": "pyside6-uic",
     "pyqt": "pyuic",
     "pyqt5": "pyuic5",
+    "pyqt6": "pyuic6"
 }
 
 
