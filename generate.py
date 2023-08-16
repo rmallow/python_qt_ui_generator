@@ -8,7 +8,7 @@ VERSION_TO_COMMAND = {
     "pyside6": "pyside6-uic",
     "pyqt": "pyuic",
     "pyqt5": "pyuic5",
-    "pyqt6": "pyuic6"
+    "pyqt6": "pyuic6",
 }
 
 
@@ -87,7 +87,9 @@ def main():
     """Generate python code from files in path"""
     if runCommands:
         for file in ui_files:
-            os.system(f"{args.env}/{command} {file} -o ui_{file[:-3]}.py")
+            os.system(
+                f"{args.env}/{command} {file} -o ui_{file[:-3]}.py --from-imports"
+            )
 
 
 if __name__ == "__main__":
